@@ -25,6 +25,21 @@ Support staff may need to manually read incoming tickets, assign categories, and
 
 TicketIQ does not claim that similar systems do not exist. Its practical goal is to implement and evaluate a small public-data prototype that combines ticket-category prediction, similar-ticket retrieval, and visible references to usable historical resolutions. If the selected dataset's resolution field is unreliable, resolution suggestion will be excluded rather than fabricated.
 
+## Proposed V1 Architecture
+
+TicketIQ follows a modular, evidence-grounded architecture consisting of the following main components:
+
+1. **Input Scope and Privacy Control** – Validates incoming support ticket text and applies configured PII redaction before processing.
+2. **Ticket Classification Capability** – Predicts the primary category of the incoming support ticket.
+3. **Similarity Retrieval Capability** – Searches the historical ticket knowledge source and retrieves the top three similar cases.
+4. **Historical Ticket Knowledge Source** – Stores audited historical tickets, including available ticket identifiers, descriptions, categories and reliable recorded resolutions.
+5. **Relevance and Abstention Control** – Determines whether retrieved cases meet the defined relevance threshold. If sufficient evidence is unavailable, the system abstains from displaying a resolution.
+6. **Evaluation and Telemetry** – Records relevant system outputs and performance information for evaluation without unnecessarily storing raw ticket text or unredacted PII.
+
+The classification and retrieval capabilities are designed as separate modules to support independent evaluation and improvement. Retrieved resolutions are presented as historical references for human verification, not as automatically generated or guaranteed solutions.
+
+The proposed architecture is conceptual and may be refined after dataset selection, data auditing and baseline experiments.
+
 ## Initial Project Objectives
 
 1. Develop and evaluate a baseline machine-learning model for classifying support-ticket text.
@@ -43,11 +58,13 @@ The system will support human decisions. It will not automatically close tickets
 ## Proposed Data Sources
 
 1. **Kaggle Customer Support Ticket Dataset** — https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset  
-   The uploader describes over 8,000 tickets with subject, description, ticket type, priority, and resolution fields [4]. Its authenticity as organisational ITSM data is not established in the inspected description, and a public comment questions the usefulness of the resolution field. Audit the CSV and license before use; remove personal fields such as names and emails. Use recorded resolutions only if their quality is acceptable.
+   The uploader describes over 8,000 tickets with subject, description, ticket type, priority, and resolution fields [4]. Its authenticity as organisational ITSM data is not established in the inspected description, and a public comment questions the usefulness of the resolution field. Audit the CSV and license before use; remove personal fields such as names and emails. Use recorded resolutions only if their quality is acceptable. Dataset selection is currently pending. Candidate datasets will be evaluated based on domain relevance, text availability, category labels, historical resolution quality, licensing and suitability for retrieval evaluation.Engineering Gap / Limitation
 2. **Microsoft / Endava ITSM ticket-classification project** — https://github.com/pourabkarchaudhuri/itsm-ticket-classification  
    The repository describes an anonymised, labelled support-ticket dataset and classification proof-of-concept [2]. Verify current dataset availability and terms of use; the project description does not confirm reliable resolution text.
 3. **UCI Incident Management Process Enriched Event Log** — https://archive.ics.uci.edu/dataset/498/incident+management+process+enriched+event+log  
    UCI reports 24,918 incidents and 141,712 events under CC BY 4.0, but explicitly says textual-information attributes are not included [5]. It is not suitable for TicketIQ's primary text-classification or retrieval task.
+
+## Project Status: Planning and Architecture Design
 
 ## Responsible AI Risks
 
