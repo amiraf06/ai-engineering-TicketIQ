@@ -20,6 +20,14 @@
 * **Fails Privacy & Scope Boundaries (FR5, RAI1):** Passing raw user text directly to an AI capability without an input guardrail increases the risk of indexing or exposing Personal Identifiable Information (PII) and processing empty or out-of-domain inputs.
 * **Fails Independent Maintainability (NFR4):** Coupling historical knowledge inside model weights prevents support teams from adding newly resolved tickets toward the < 5 minute update acceptance target without retraining the model.
 
+### 4. Retrieval Evaluation and Data Leakage Prevention
+* To prevent data leakage, the dataset will be separated into reference, validation, and test partitions after duplicate and near-duplicate removal.
+- **Reference Set:** Used as the searchable historical ticket database.
+- **Validation Set:** Used to evaluate retrieval behaviour and determine the similarity threshold.
+- **Test Set:** Used only for final retrieval evaluation.
+* Only the Reference Set will be indexed for retrieval. Validation and test tickets will not be included in the searchable database.
+* The similarity threshold will be selected using validation results and kept unchanged during final testing.
+
 ---
 
 ## Step C2 - Identifying Architecture Needs from Requirements
