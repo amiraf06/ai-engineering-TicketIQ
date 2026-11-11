@@ -39,3 +39,53 @@ print(
     .head(5)
     .to_string(index=False)
 )
+
+# Text quality audit
+print("\n===== TEXT QUALITY AUDIT =====")
+
+text_columns = ["Ticket Subject", "Ticket Description"]
+
+for col in text_columns:
+    text = df[col].fillna("").astype(str)
+
+    print(f"\n--- {col} ---")
+    print("Empty values:", text.str.strip().eq("").sum())
+    print(
+        "Placeholder occurrences:",
+        text.str.contains(r"\{[^{}]+\}", regex=True).sum()
+    )
+    print("Average length:", round(text.str.len().mean(), 2))
+    print("Minimum length:", text.str.len().min())
+    print("Maximum length:", text.str.len().max())
+    print("Duplicate text values:", text.duplicated().sum())
+
+# Combined ticket text duplication
+print("\n===== DUPLICATE TICKET TEXT =====")
+
+normalized = (
+    df["Ticket Subject"].fillna("").str.lower().str.strip()
+    .str.replace(r"\s+", " ", regex=True)
+    + " "
+    + df["Ticket Description"].fillna("").str.lower().str.strip()
+    .str.replace(r"\s+", " ", regex=True)
+)
+
+print(
+    "Repeated subject-description combinations:",
+    normalized.duplicated().sum()
+)
+
+# Representative samples by category
+print("\n===== SAMPLE RECORDS BY TICKET TYPE =====")
+
+for category in sorted(df["Ticket Type"].dropna().unique()):
+    print(f"\n--- {category} ---")
+
+    sample = df[df["Ticket Type"] == category][
+        ["Ticket Subject", "Ticket Description"]
+    ].head(3)
+
+    for _, record in sample.iterrows():
+        print("Subject:", record["Ticket Subject"])
+        print("Description:", record["Ticket Description"][:400])
+        print()
