@@ -46,10 +46,16 @@ The dataset will initially support data inspection, preparation, label assessmen
 
 
 ## 4. Data Access and Rights
+- Dataset source: Kaggle
+- Dataset author: Suraj
+- Dataset version: Version 1
+- File size: 3.95 MB
+- Last updated: Approximately 3 years ago, as displayed on Kaggle at the time of inspection.
+- Expected update frequency: Annually
+- Dataset licence: CC0 1.0 Universal (Public Domain Dedication)
+- Licence reference: https://creativecommons.org/publicdomain/zero/1.0/
 
-The dataset was obtained from Kaggle.
-
-The exact dataset licence and redistribution permissions have not yet been verified.
+The dataset is publicly available through Kaggle under the CC0 1.0 Universal licence. The original dataset source and licence reference will be retained for documentation and traceability.
 
 ## 5. Initial Observations
 
