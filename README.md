@@ -106,18 +106,12 @@ The downloaded dataset contains 8,470 rows in total, including the header row, r
 The dataset will be used as the initial candidate for the TicketIQ classification experiments. However, the total number of records does not represent the final number of usable tickets. Further data inspection and preprocessing are required before model development.
 
 The dataset audit will examine:
-
-Missing values in the selected input and target columns.
-
-Duplicate ticket records.
-
-Text quality and consistency in ticket subject and description.
-
-Category label consistency and class distribution.
-
-Records that may contain irrelevant, incomplete, or unsuitable information.
-
-Dataset reuse conditions and suitability for academic use.
+- Missing values in the selected input and target columns.
+- Duplicate ticket records.
+- Text quality and consistency in ticket subject and description.
+- Category label consistency and class distribution.
+- Records that may contain irrelevant, incomplete, or unsuitable information.
+- Dataset reuse conditions and suitability for academic use.
 
 Ticket subject and initial description are the proposed model inputs. The final target category will only be confirmed after the dataset audit.
 
