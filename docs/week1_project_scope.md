@@ -1,96 +1,140 @@
-# TicketIQ: AI-Assisted Support Ticket Triage and Similar-Case Retrieval
 
-**Status:** Initial project proposal — scope and dataset still need validation.
+# TicketIQ: Comparative Machine-Learning Models for Support Ticket Classification
+
+**Status:** Revised Initial Project Proposal — Dataset and Target-Label Suitability Require Validation
 
 ## 1. Project Name and Domain
 
-**TicketIQ** is an AI Engineering project in the IT support / IT Service Management (ITSM) domain. It will help support staff review incoming tickets and find useful historical cases.
+TicketIQ is an AI Engineering project in the IT support / IT Service Management (ITSM) domain. It focuses on classifying support-ticket text into predefined categories using machine-learning models.
 
 ## 2. Problem Statement
 
-Support staff may need to read each incoming ticket, assign a category, and search old tickets for relevant fixes. This can take time and may lead to inconsistent categorisation. Research and existing tools show that automatic ticket classification and AI-assisted support are practical areas to investigate [1–3]. However, the size of this problem in a particular organisation has not been measured for this project; it is the problem hypothesis to test.
+Support teams receive tickets describing technical issues or service requests. Before a ticket can be handled or routed, support staff may need to read its subject and description and assign an appropriate category.
 
-TicketIQ will be a decision-support prototype, not an autonomous IT operator. It will classify ticket text, retrieve similar historical tickets, and show recorded resolutions only when the available data supports them.
+Manual categorisation can take time and may be inconsistent, particularly when ticket descriptions are unclear or category definitions overlap.
+
+Machine-learning text classification provides a practical approach to supporting this task. However, model performance depends on the quality of the ticket text, consistency of category labels, class distribution, and experimental design.
+
+TicketIQ will investigate this problem by developing two machine-learning classifiers for the same ticket-category prediction task. A baseline model will first be developed, followed by an advanced classical machine-learning model.
+
+Both models will be evaluated using the same data and test set so that their performance can be compared fairly.
+
+The project is an academic decision-support prototype. It does not claim a measured operational improvement in a specific organisation and will not autonomously manage support tickets.
 
 ## 3. Evidence of the Problem
 
-- **Research evidence:** Al-Hawari and Barham describe a machine-learning help-desk system for ticket classification. In their reported experiment, including ticket comments and descriptions improved prediction accuracy from 53.8% to 81.4%. This is a result from their study, not a performance claim for TicketIQ [1].
-- **Engineering example:** A public Microsoft/Endava proof-of-concept reports a help-desk ticket-classification task and describes around 50,000 labelled support tickets used for the project. It is an example of an existing workflow, not a survey proving that every support team has the same problem [2].
-- **Existing commercial capability:** Jira Service Management documents AI suggestions based on work-item context and similar past items, including possible steps for service requests and probable root causes for incidents. This confirms that similar capabilities already exist; TicketIQ must not claim to be the first system of its kind [3].
+- **Research Evidence:** Al-Hawari and Barham describe a machine-learning help-desk system for ticket classification. In their reported experiment, including ticket comments and descriptions improved prediction accuracy from 53.8% to 81.4%. This is a result from their study, not a performance claim for TicketIQ [1].
+- **Engineering Example:** A public Microsoft/Endava proof-of-concept reports a help-desk ticket-classification task and describes around 50,000 labelled support tickets used for the project. It is an example of an existing workflow, not a survey proving that every support team has the same problem [2].
+- **Project Implication:** Existing work demonstrates that support-ticket classification is a relevant machine-learning task. TicketIQ will focus on a controlled comparison between two classical text-classification models using one consistent dataset and evaluation procedure.
 
 ## 4. Initial Related Work
 
-| Related work / solution | What it already does | Limitation relevant to this project |
+| Related Work / Solution | What It Already Does | Relevance to This Project |
 |---|---|---|
-| Al-Hawari & Barham, *A machine learning based help desk system for IT service management* (2021) [1] | Uses machine learning to classify help-desk tickets and describes a help-desk workflow. | The paper's described classification results do not by themselves establish that TicketIQ's retrieval and historical-resolution display will be reliable. TicketIQ must evaluate those functions separately. |
-| Microsoft / Endava ITSM ticket-classification proof-of-concept [2] | Demonstrates text preparation, classification of ticket fields, and a web-service deployment approach. | Its documented focus is automatic classification; TicketIQ will specifically test whether retrieved historical cases and their recorded resolutions are relevant. |
-| Atlassian Jira Service Management AI suggestions [3] | Uses work-item context and past similar work items to suggest steps or probable root causes. | Atlassian documents that suggestions cannot be manually configured or influenced by knowledge-base content. TicketIQ's prototype will instead show the matching historical tickets and their source records so the user can inspect the evidence. This is a design difference to evaluate, not a claim that TicketIQ is better. |
-| ServiceNow priority lookup rules [6] | Calculates ticket priority from configured impact and urgency rules. | This shows why a priority model could be misleading if it merely learns a rule-based label from impact and urgency. Priority prediction will be optional and used only if the dataset and evaluation design justify it. |
+| Al-Hawari & Barham (2021) [1] | Uses machine learning to classify help-desk tickets. | Supports the relevance of applying machine learning to ticket classification. |
+| Microsoft / Endava ITSM Proof-of-Concept [2] | Demonstrates text preparation and ticket-field classification. | Provides an engineering example of automated ticket classification. |
+| Customer Support Ticket Dataset – Kaggle [3] | Provides a public candidate dataset containing support-ticket fields. | May support a supervised classification experiment, subject to data-quality and label-suitability checks. |
 
 ## 5. Engineering Gap / Limitation
 
-The project does **not** claim that no similar systems exist. Its practical goal is to build and evaluate a small, transparent prototype using public data that combines:
+The project does not claim that no ticket-classification systems exist. Its practical engineering focus is to implement and evaluate two machine-learning approaches under the same experimental conditions.
 
-1. Ticket-category prediction from text.
-2. Retrieval of similar historical tickets.
-3. Display of the recorded resolution and source ticket when the match is sufficiently relevant.
+The project will investigate whether a more advanced classical machine-learning classifier provides better classification performance than a simple baseline on the selected dataset.
 
-The engineering question is whether this workflow provides useful, inspectable references on the selected public dataset. If the dataset's resolution field is unreliable, TicketIQ will limit the prototype to classification and similar-ticket retrieval rather than inventing or generating fixes.
+The comparison will use identical input fields, target categories, data partitions, and evaluation metrics.
+
+The result cannot be assumed in advance. The advanced model may perform better, similarly, or worse than the baseline. TicketIQ will report the measured results and discuss possible reasons for the observed differences.
 
 ## 6. Project Objectives
 
-- **O1:** Develop and evaluate a baseline machine-learning model that classifies support tickets from their text.
-- **O2:** Build a similar-ticket retrieval feature that shows the matching historical tickets and any usable recorded resolutions.
-- **O3:** Evaluate classification quality and retrieval relevance, including cases where the system should say that it cannot find a sufficiently relevant match.
+- **O1 – Baseline Model:** To develop a baseline machine-learning model to classify support tickets into predefined categories using ticket subject and description.
+- **O2 – Advanced Model:** To develop an advanced machine-learning model to classify support tickets into the same predefined categories using the same input data.
+- **O3 – Model Comparison:** To compare the performance of the baseline and advanced machine-learning models using standard classification evaluation metrics.
 
-**Optional extension:** Evaluate priority prediction only if the selected data contains reliable priority labels and the experiment avoids label leakage. It is not required for the first working version.
+## 7. Proposed Models and Technical Approach
 
-## 7. Target Users
+| Objective | Proposed Approach | Explanation |
+|---|---|---|
+| O1 | TF-IDF + Multinomial Naive Bayes | A simple and computationally efficient baseline suited to text features. |
+| O2 | TF-IDF + Linear Support Vector Classifier (LinearSVC) | A classical discriminative classifier that learns decision boundaries between ticket categories. |
+| O3 | Comparative Evaluation | Both models are tested on the same held-out test records. |
+
+TF-IDF is the proposed text representation for both models. The selected text fields, cleaning steps, target labels, and data split will remain consistent.
+
+Any model tuning will use training/validation data only; the held-out test set will be reserved for final evaluation.
+
+The proposed methods are selected to keep the project feasible within one semester. They can be implemented using scikit-learn and do not require paid AI APIs or GPU-based training.
+
+## 8. Target Users
 
 - IT help-desk agents.
-- IT support teams reviewing and categorising incoming tickets.
+- IT support teams reviewing and categorising incoming support tickets.
 
-The system is intended to assist a human support agent. It will not automatically close incidents, change production systems, or apply a suggested fix.
+The system is intended to provide a predicted category for human review. It will not automatically close incidents, modify production systems, execute fixes, or make final operational decisions.
 
-## 8. Data Sources
+## 9. Data Sources
 
-The data sources below are publicly accessible candidates. The dataset files must be inspected and their reuse terms checked before they are used in the final experiment.
+### 9.1 Customer Support Ticket Dataset – Kaggle
 
-1. **Customer Support Ticket Dataset — Kaggle**  
-   URL: https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset  
-   The uploader describes more than 8,000 tickets with fields such as subject, description, ticket type, priority, and resolution [4]. The inspected public description does not establish that these are authentic organisational ITSM records, and a public comment questions the usefulness of the resolution field [4]. Therefore, first inspect the CSV, missing values, duplicates, label distributions, resolution quality, and license. Remove personal fields such as names and emails before modelling. Use this dataset for resolution retrieval only if its recorded resolutions pass the audit.
+https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset
 
-2. **Microsoft / Endava ITSM ticket-classification project**  
-   URL: https://github.com/pourabkarchaudhuri/itsm-ticket-classification  
-   Its README describes around 50,000 labelled support tickets from an internal help-desk source, anonymised for the public proof-of-concept, and demonstrates classification tasks [2]. Confirm current download availability and data reuse terms before using the data. The public project description does not establish that it contains reliable resolution text for TicketIQ's retrieval feature.
+The uploader describes more than 8,000 tickets with fields such as subject, description, ticket type, priority, and resolution [3].
 
-3. **Incident Management Process Enriched Event Log — UCI Machine Learning Repository**  
-   URL: https://archive.ics.uci.edu/dataset/498/incident+management+process+enriched+event+log  
-   UCI reports 24,918 incidents, 141,712 events, and a CC BY 4.0 licence. Crucially, UCI states that textual-information attributes are not included [5]. This dataset is therefore **not suitable as TicketIQ's main text-classification or similar-ticket dataset**. It can be considered only for separate structured incident-process analysis; it should not be merged casually with the text datasets.
+The public description does not establish that these are authentic organisational ITSM records. The CSV must be audited for missing values, duplicates, inconsistent or noisy labels, class distribution, text quality, and licensing.
 
-## 9. Comparison with EduAdvisor
+The target category must not be finalised until this audit is complete. Personal fields such as names and email addresses must be excluded from model inputs.
 
-**Similarities:** Both are domain-specific AI applications with a defined user group, explicit scope boundaries, evaluation criteria, and Responsible AI considerations. Both should avoid unsupported outputs and provide evidence that users can inspect.
+### 9.2 Microsoft / Endava ITSM Ticket-Classification Project
 
-**Differences:** EduAdvisor answers academic questions from approved university documents. TicketIQ analyses support-ticket text, predicts ticket categories, and retrieves similar historical tickets. Its main evidence will be the input ticket and the retrieved historical records, rather than university document passages.
+https://github.com/pourabkarchaudhuri/itsm-ticket-classification
 
-## 10. Responsible AI Risks
+Its README describes around 50,000 labelled support tickets from an internal help-desk source, anonymised for the public proof-of-concept [2].
 
-1. **Privacy:** Public support-ticket data may contain names, emails, or other personal information. Inspect and remove personal fields, avoid using them as model inputs, and do not expose them in search results.
-2. **Incorrect or unsafe resolution references:** A similar ticket may not have the same cause, and an old fix may be unsuitable. Show historical cases as references, include their identifiers or source links where available, show a relevance score, and ask a human to verify the proposed fix. If no sufficiently relevant case is found, return no resolution suggestion.
-3. **Class imbalance and prioritisation risk:** Rare but serious categories may be missed. Report per-class precision/recall or macro-F1 and do not let the prototype automatically decide or downgrade a critical incident.
-4. **Data leakage:** Do not use post-resolution text or fields unavailable when a new ticket arrives as input for predicting its initial category. Deduplicate before splitting data. If testing priority prediction, check that the model is not merely reproducing a deterministic impact/urgency lookup [6].
+Confirm current download availability and data reuse terms before considering it as an alternative dataset.
+
+### 9.3 Incident Management Process Enriched Event Log – UCI
+
+https://archive.ics.uci.edu/dataset/498/incident+management+process+enriched+event+log
+
+UCI reports 24,918 incidents, 141,712 events, and a CC BY 4.0 licence. UCI states that textual-information attributes are not included [4].
+
+This dataset is therefore not suitable as the main text-classification dataset for TicketIQ.
+
+## 10. Scope Boundaries
+
+### Included
+
+1. Text-based multi-class classification of support tickets.
+2. Use of ticket subject and initial description as model input, subject to dataset audit.
+3. Development of one baseline and one advanced machine-learning classifier.
+4. Evaluation of both models using the same held-out test set.
+5. Comparison of overall and per-class performance.
+6. A simple prototype to demonstrate category predictions.
+
+### Excluded
+
+1. Similar-ticket retrieval or historical case search.
+2. Display of historical resolutions or troubleshooting instructions.
+3. Generative AI or chatbot-based troubleshooting.
+4. Automatic ticket routing, closure, or execution of fixes.
+5. A separate priority-prediction task.
+6. Deep-learning or large-language-model fine-tuning.
+
+## 11. Responsible AI Risks
+
+1. **Privacy:** Public support-ticket data may contain names, emails, or other personal information. Inspect and remove personal fields, avoid using them as model inputs, and do not expose them in published examples.
+2. **Data Leakage:** Do not use post-resolution text, closing notes, or fields unavailable when a new ticket arrives as input for predicting its initial category.
+3. **Duplicate Leakage:** Check and remove exact or near-duplicate records before splitting data.
+4. **Class Imbalance:** Rare categories may be poorly classified. Report macro-F1 and per-class precision, recall, and F1 rather than relying only on accuracy.
+5. **Human Oversight:** Treat predicted categories as suggestions for review.
+6. **Dataset Limitations:** Document synthetic-looking records, inconsistent labels, missing values, and categories with insufficient examples.
 
 ## References
 
-[1] F. Al-Hawari and H. Barham, “A machine learning based help desk system for IT service management,” *Journal of King Saud University – Computer and Information Sciences*, 2021. https://doi.org/10.1016/j.jksuci.2019.04.001
+[1] F. Al-Hawari and H. Barham, “A machine learning based help desk system for IT service management,” Journal of King Saud University – Computer and Information Sciences, 2021. https://doi.org/10.1016/j.jksuci.2019.04.001
 
 [2] Microsoft / Endava proof-of-concept repository, “ITSM ticket classification.” https://github.com/pourabkarchaudhuri/itsm-ticket-classification
 
-[3] Atlassian Support, “About suggestions on work items.” https://support.atlassian.com/jira-service-management-cloud/docs/about-suggestions-on-issue-view/
+[3] Suraj, “Customer Support Ticket Dataset,” Kaggle. https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset
 
-[4] Suraj, “Customer Support Ticket Dataset,” Kaggle. https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset
-
-[5] C. Amaral, M. Fantinato, and S. Peres, “Incident management process enriched event log,” UCI Machine Learning Repository. https://archive.ics.uci.edu/dataset/498/incident+management+process+enriched+event+log
-
-[6] ServiceNow documentation, “Define priority lookup rules.” https://www.servicenow.com/docs/r/it-service-management/incident-management/def-prio-lookup-rules.html
+[4] C. Amaral, M. Fantinato, and S. Peres, “Incident management process enriched event log,” UCI Machine Learning Repository. https://archive.ics.uci.edu/dataset/498/incident+management+process+enriched+event+log
