@@ -1,79 +1,82 @@
+
 # TicketIQ: Project Framing, Application Scope, and Requirements Specification
 
-**Version:** 1.3  
-**Status:** Week 2 Engineering Specification  
+**Version:** 2.0  
+**Status:** Revised Week 2 Engineering Specification
 
 ---
 
 ## Section 0 - Project Framing & Application Scope Checkpoint
 
 | Framing Element | TicketIQ Specification |
-| :--- | :--- |
-| **Problem + Evidence** | IT support staff must manually read incoming tickets, assign categories, and search historical records for relevant past fixes, which takes time and risks inconsistent categorisation. **Evidence:** (1) Al-Hawari and Barham (2021) demonstrated in a help-desk study that incorporating ticket descriptions and comments improved machine-learning classification accuracy from 53.8% to 81.4% in their experimental setup [1]. (2) A public Microsoft/Endava ITSM proof-of-concept documents automated ticket classification across approximately 50,000 labelled support tickets as a practical enterprise workflow [2]. |
-| **Existing Approaches** | 1. **Al-Hawari & Barham (2021) [1]:** Applies supervised machine learning to classify help-desk tickets within an IT service management workflow.<br>2. **Microsoft / Endava ITSM Proof-of-Concept [2]:** Demonstrates text preprocessing, multi-field ticket classification, and web-service deployment.<br>3. **Atlassian Jira Service Management AI [3]:** Uses work-item context and similar historical items to suggest steps for service requests and probable root causes for incidents.<br>4. **ServiceNow Priority Lookup Rules [6]:** Computes incident priority deterministically from configured impact and urgency matrices. |
-| **Project / Engineering Gap** | Existing public proof-of-concepts focus primarily on standalone category prediction [1, 2], while commercial tools generate black-box suggestions that cannot be easily audited at the source-record level [3]. The practical engineering gap for TicketIQ is building and evaluating a transparent, inspectable prototype on public data that combines category prediction with similar-case retrieval, displays usable recorded resolutions only when match relevance is sufficient, and abstains when historical evidence is weak. |
-| **Objective O1** | **To develop** and evaluate a baseline machine-learning classification pipeline that predicts support-ticket categories from initial ticket text. |
-| **Objective O2** | **To develop** a similar-ticket retrieval capability that surfaces matching historical tickets alongside their source identifiers, similarity scores, and usable recorded resolutions that pass data-quality checks. |
-| **Objective O3** | **To evaluate** classification performance, retrieval relevance, and abstention behaviour when no sufficiently relevant historical ticket exists in the knowledge base. |
-| **Intended Users** | Tier-1 IT help-desk agents and IT support triage teams reviewing incoming support tickets. |
-| **Supported Tasks** | 1. Predicting the primary category of a newly submitted support ticket from its subject and description.<br>2. Retrieving the top matching historical tickets for reference.<br>3. Displaying the recorded historical resolution and source ticket ID for human verification when similarity meets a defined threshold.<br>4. Flagging low-confidence or unmatched queries for manual human triage. |
-| **Information / Knowledge Domain** | Public IT support and customer support ticket datasets (specifically audited subsets of the Kaggle Customer Support Ticket Dataset [4] and/or Microsoft/Endava ITSM dataset [2] containing ticket subjects, descriptions, category labels, and historical resolution records that pass quality checks). |
-| **Operating Context** | Interactive human-in-the-loop decision-support prototype used during initial ticket triage. The human agent reviews the predicted category and historical references before taking action in the ticketing workflow. |
-| **Important Constraints** | 1. **Data Quality Constraint:** Public datasets may contain noisy, generic, or synthetic resolution text; resolution display depends on passing Week 3-4 data quality audits.<br>2. **Leakage Constraint:** Only fields available at ticket creation time (subject and initial description) may be used as inputs.<br>3. **Budget & Compute Constraint:** Target architecture is local-first execution with US$0.00 external AI/API cost; Google Colab is restricted to experimentation on public/sanitised data. |
-| **Explicit Out-of-Scope Tasks** | 1. Automatically closing tickets, executing scripts, or modifying production IT systems.<br>2. Generating or inventing unrecorded troubleshooting steps when historical data lacks a valid match.<br>3. Overriding organisational deterministic priority rules (Impact x Urgency) or automatically downgrading critical incidents.<br>4. Processing non-textual event logs without ticket descriptions (e.g., UCI Incident Event Log [5]). |
-| **Evaluation Focus** | Later evaluation must determine: (1) whether initial ticket text supports reliable multi-class category prediction across imbalanced classes, (2) whether retrieved historical tickets and their recorded resolutions are genuinely relevant to incoming queries, and (3) whether the system reliably abstains from suggesting resolutions when match similarity is below the threshold. |
+|---|---|
+| Problem + Evidence | Support teams receive tickets containing technical issues or service requests. Staff may need to read each ticket and assign a category before routing or handling it. Manual categorisation can be time-consuming and inconsistent. Al-Hawari and Barham (2021) investigated machine-learning ticket classification in a help-desk workflow [1]. A Microsoft/Endava proof-of-concept also documents automated ticket classification as an ITSM use case [2]. |
+| Existing Approaches | 1. Al-Hawari & Barham (2021) [1]: Supervised machine learning for help-desk ticket classification. 2. Microsoft / Endava [2]: Text preprocessing and ticket-field classification. 3. Public support-ticket datasets [3]: Candidate data for supervised text-classification experiments. |
+| Project / Engineering Gap | Ticket classification is an established task. TicketIQ's engineering focus is to implement two classical machine-learning models for the same text-classification problem and compare them under a controlled and reproducible experiment. |
+| Objective O1 | To develop a baseline machine-learning model to classify support tickets into predefined categories using ticket subject and description. |
+| Objective O2 | To develop an advanced machine-learning model to classify support tickets into the same predefined categories using the same input data. |
+| Objective O3 | To compare the performance of the baseline and advanced machine-learning models using standard classification evaluation metrics. |
+| Intended Users | IT help-desk agents and IT support staff who review and categorise incoming support tickets. |
+| Supported Tasks | 1. Accept ticket subject and initial description text. 2. Process text into machine-learning features. 3. Predict one predefined ticket category. 4. Compare baseline and advanced model outputs during evaluation. 5. Present the predicted category as a suggestion for human review. |
+| Information / Knowledge Domain | Public support-ticket datasets containing initial ticket text and a suitable category label. The Kaggle Customer Support Ticket Dataset [3] is a candidate and must pass data-quality and label-suitability checks. |
+| Operating Context | A local or locally runnable academic prototype used to demonstrate text-based ticket categorisation. A human user reviews the predicted category. |
+| Important Constraints | 1. Dataset text fields and category labels must be audited. 2. Both models must use the same input fields, target categories, and data partitions. 3. Only information available at initial ticket submission may be used. 4. Prefer classical scikit-learn models that run locally. 5. The project must remain feasible within one semester. |
+| Explicit Out-of-Scope Tasks | 1. Similar-ticket retrieval and historical case search. 2. Displaying historical resolutions. 3. Generating fixes using a language model or chatbot. 4. Automatically routing, closing, prioritising, or modifying production tickets. 5. Priority prediction as a separate task. 6. Deep-learning or large-language-model fine-tuning. |
+| Evaluation Focus | Evaluate the baseline model, evaluate the advanced model on the same held-out test records, and compare their overall and per-class results using accuracy, precision, recall, macro-F1, and confusion matrices. |
 
 ---
 
 ## Section 1 - Functional Requirements
 
-| # | Requirement - The system SHALL | Scope Boundary - SHALL NOT (where relevant) |
-| :--- | :--- | :--- |
-| **FR1** | The system shall predict a primary ticket category and associated confidence score from an incoming ticket's initial subject and description text. | The system shall not use post-resolution fields, closing notes, or fields unavailable at initial ticket submission time to predict categories. |
-| **FR2** | The system shall retrieve and rank the top-*k* (e.g., top 3) most similar historical tickets from the indexed ticket repository for a given incoming ticket query. | The system shall not retrieve records from unverified external web sources outside the audited historical ticket repository. |
-| **FR3** | The system shall display the historical ticket identifier, similarity score, and usable recorded resolution text (that passed data-quality checks) as a historical reference for human verification when retrieved tickets meet or exceed the defined relevance threshold. | The system shall not invent, extrapolate, or synthesize new troubleshooting instructions that are not explicitly present in the retrieved source ticket. |
-| **FR4** | The system shall abstain from displaying resolution recommendations and output an explicit "No sufficiently similar historical case found - manual triage required" notice when all retrieved candidates fall below the relevance threshold. | The system shall not force a best-guess resolution display when similarity scores fall below the minimum threshold. |
-| **FR5** | The system shall reject empty, non-textual, or out-of-domain inputs and prompt the support agent to provide a valid support ticket description. | The system shall not automatically assign incident severity, downgrade critical tickets, or execute automated ticket closure. |
+| ID | Requirement - The System SHALL | Scope Boundary - SHALL NOT |
+|---|---|---|
+| FR1 | Accept a support ticket's subject and initial description as text input for classification. | Require resolution notes, closing comments, or other post-resolution information for prediction. |
+| FR2 | Preprocess the selected ticket text and transform it into numerical features using the agreed text-representation method, initially TF-IDF. | Fit preprocessing vocabulary or feature weights using held-out test data. |
+| FR3 | Provide a baseline classification model using TF-IDF features and Multinomial Naive Bayes, subject to dataset compatibility. | Use a different target-label definition or test split from the advanced model. |
+| FR4 | Provide an advanced classification model using TF-IDF features and LinearSVC, subject to dataset suitability. | Use additional input fields or test records unavailable to the baseline model. |
+| FR5 | Evaluate both models on the same held-out test records and produce comparable classification metrics and confusion matrices. | Use the held-out test set for fitting TF-IDF, model training, or hyperparameter selection. |
+| FR6 | Accept valid non-empty ticket text and provide a predicted category from the predefined target classes. | Automatically route, close, prioritise, or modify a real support ticket. |
 
 ---
 
 ## Section 2 - Non-Functional Requirements
 
-| # | Quality Attribute | Requirement | Measurement Method | Metric | Threshold (Acceptance Target) |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **NFR1** | **Correctness (Classification)** | Category predictions on incoming support tickets shall achieve acceptable classification performance across potentially imbalanced ticket classes. | Evaluate classification model outputs on a held-out, deduplicated test split (minimum 15-20% of dataset) and compare against a majority-class baseline. | Macro-F1 score | Macro-F1 >= 0.70 (and >= 15 percentage points above majority baseline) |
-| **NFR2** | **Correctness (Retrieval Relevance)** | Retrieved historical tickets presented to the support agent shall be topically and operationally relevant to the incoming ticket query. | Evaluate top-3 retrieved results across a curated evaluation set of 50 test queries using a defined 3-point relevance rubric (0 = irrelevant, 1 = partially related, 2 = directly relevant). | Precision@3 and Hit Rate@3 | Hit Rate@3 >= 80%; Precision@3 >= 0.65 |
-| **NFR3** | **Performance (Latency)** | The system shall return both the predicted ticket category and retrieved similar cases within an interactive response window suitable for live triage. | Measure end-to-end execution latency across a benchmark workload of 100 sequential test queries in the target runtime environment. | 90th percentile (p90) end-to-end latency | p90 latency < 2,000 ms (2.0 s) |
-| **NFR4** | **Maintainability** | New resolved historical tickets shall be integrable into the retrieval knowledge index without retraining the classification model or modifying application interface code. | Execute a controlled index-update test by appending a batch of 100 newly formatted resolved ticket records to the retrieval store. | Index update completion time and code modification count | Update time < 5 minutes; 0 application code changes required |
-| **NFR5** | **Cost** | Prototype inference and retrieval operations shall incur zero external AI or paid API usage costs. | Log external AI/API expenditure across a full 100-query evaluation benchmark run. | External AI/API cost per 100 queries | External AI/API cost = US$0.00 (local-first target execution; Google Colab restricted to experimentation on public/sanitised data) |
+| ID | Quality Attribute | Requirement | Measurement Method | Metric | Acceptance Target |
+|---|---|---|---|---|---|
+| NFR1 | Classification Quality | Both models shall be evaluated using standard multi-class classification metrics on the same held-out test set. | Generate a classification report for each model. | Accuracy, macro precision, macro recall, macro-F1 | Report all metrics for both models. |
+| NFR2 | Fairness of Comparison | Both models shall use the same input fields, target labels, data split, and test records. | Compare experiment configuration and test-record indices. | Configuration consistency | Same held-out test records and target-label mapping. |
+| NFR3 | Reproducibility | The experiment shall use a documented random seed and repeatable preprocessing/training pipeline. | Re-run the experiment using the documented configuration. | Reproducibility of split and metrics | Same data split and materially consistent results under the documented environment. |
+| NFR4 | Performance | The prototype shall return a category prediction within a practical interactive response time on the target local environment. | Measure prediction latency over test inputs after model loading. | Median and p90 prediction latency | Record actual results and environment; set a numeric target after the first prototype. |
+| NFR5 | Cost | Model development and inference shall avoid paid external AI APIs. | Review dependencies and record external API usage. | External AI/API cost | US$0.00 external AI/API usage for the core workflow. |
 
 ---
 
 ## Section 3 - Responsible AI Requirements
 
-| # | Responsible AI Risk | Requirement | Measurement Method | Metric | Threshold (Acceptance Target) |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **RAI1** | **Privacy (PII Exposure)** | The system shall redact configured Personal Identifiable Information patterns (names, email addresses, phone numbers, and IP addresses) during data preprocessing and input validation before indexing, logging, or displaying retrieved tickets. | Run an automated privacy test suite injecting 50 synthetic ticket queries and inspecting 100 indexed historical records containing seeded PII patterns. | Number of exposed raw PII tokens on configured test patterns in indexed data, telemetry logs, or UI output | 0 exposed PII tokens on configured test patterns (100% redaction on seeded test suite) |
-| **RAI2** | **Transparency & Grounding (Unsafe Resolution Reference)** | Every displayed historical resolution shall be accompanied by its verifiable source Ticket ID and similarity score for human verification, and the system shall abstain from suggesting resolutions when query similarity is below the threshold. | Evaluate system responses on an evaluation set comprising 30 supported in-domain queries and 20 unmatchable/out-of-scope queries. | Source ID citation presence rate; Abstention success rate on unmatchable queries | 100% source ID presence on displayed resolutions; >= 90% abstention rate on unmatchable queries |
-| **RAI3** | **Fairness / Class Imbalance Risk** | Classification evaluation shall audit performance across all individual ticket categories to ensure rare or critical incident classes are not systematically neglected. | Compute per-class precision, recall, and F1 scores on the held-out test split across all categories with at least 30 test instances. | Minimum per-class recall and per-class metric reporting completeness | Per-class recall >= 0.55 for all supported classes; 100% of classes reported in evaluation logs |
-| **RAI4** | **Data Integrity (Data Leakage & Resolution Quality Audit)** | The classification and retrieval pipelines shall exclude post-submission fields from model inputs, eliminate duplicate ticket records prior to splitting, and audit historical resolutions for usability before indexing. | Run an automated pre-training audit script checking input feature schemas, resolution usability flags, and exact/near-duplicate text overlap across splits. | Count of post-submission input features; Train-test duplicate leakage rate | 0 post-submission features used as input; 0% duplicate overlap across train and test splits |
+| ID | Responsible AI Risk | Requirement | Measurement Method | Metric | Acceptance Target |
+|---|---|---|---|---|---|
+| RAI1 | Privacy | Personal identifiers not required for classification shall be excluded from model inputs and public output examples. | Inspect selected columns and processed records. | Personal-identifier fields used as input | 0 unnecessary personal-identifier fields. |
+| RAI2 | Data Leakage | Models shall use only ticket information available at initial submission time. | Audit input feature list and data pipeline. | Post-submission fields used as input | 0 post-submission fields. |
+| RAI3 | Class Imbalance | Evaluation shall report class-level performance so that weak minority-category performance is not hidden by accuracy. | Generate per-class precision, recall, F1, support, and confusion matrix. | Completeness of per-class reporting | 100% of evaluable target classes included. |
+| RAI4 | Data Integrity | Exact and near-duplicate records shall be checked before splitting the dataset. | Run duplicate checks and inspect cross-split overlap. | Known duplicate overlap across train/test | 0 known exact-duplicate records across splits after cleaning. |
+| RAI5 | Human Oversight | Predicted categories shall be presented as model outputs for human review, not guaranteed decisions. | Review interface wording and workflow. | Presence of human-review notice | Predictions labelled as suggestions; no automatic ticket action. |
 
 ---
 
 ## Part A Reflection
 
-**Question:** *Which Responsible AI requirement in your project will be the most difficult to measure or enforce technically? Why?*
+**Question:** Which Responsible AI requirement in your project will be the most difficult to measure or enforce technically? Why?
 
-**Reflection:**  
-The most technically challenging Responsible AI requirement to enforce and measure is **RAI2 (Transparency & Grounding / Abstention on Unsafe Resolution References)**, closely followed by unstructured PII redaction in **RAI1**. While attaching a source Ticket ID to a retrieved record is straightforward, calibrating the **abstention threshold** for similar-ticket retrieval is inherently difficult. In support-ticket text, two tickets may share high lexical or semantic similarity (for example, both mentioning "VPN connection timeout error on Windows 11") while having completely different underlying root causes and incompatible fixes. Consequently, a similarity score acts only as a retrieval filter and does not prove that a historical resolution is safe or applicable. Furthermore, public support ticket datasets rarely provide ground-truth "unmatchable" query sets or explicit pair-wise relevance labels. Measuring abstention accuracy therefore requires constructing a dedicated evaluation set containing both valid matches and adversarial/novel ticket queries, tuning the similarity threshold to balance false positive suggestions against false abstentions, and keeping a human agent in the loop to verify every retrieved reference.
+**Reflection:**
 
----
+The most difficult Responsible AI requirement to evaluate is RAI3 (Class Imbalance). A model may achieve high overall accuracy by correctly predicting common categories while performing poorly on less frequent categories. This is important because a support-ticket classifier should not hide weak performance on minority categories behind one overall score.
+
+TicketIQ will therefore report macro-F1, per-class precision, recall, F1, and a confusion matrix for both models. However, some categories may contain too few examples for a stable evaluation. If this occurs, the limitation will be documented rather than presenting an unreliable class-level result as conclusive.
 
 ## References
 
-[1] F. Al-Hawari and H. Barham, "A machine learning based help desk system for IT service management," *Journal of King Saud University - Computer and Information Sciences*, vol. 33, no. 6, pp. 702-718, 2021.  
-[2] Microsoft / Endava, "ITSM ticket classification proof-of-concept repository," GitHub. https://github.com/pourabkarchaudhuri/itsm-ticket-classification  
-[3] Atlassian Support, "About suggestions on work items," Jira Service Management Cloud Documentation. https://support.atlassian.com/jira-service-management-cloud/docs/about-suggestions-on-issue-view/  
-[4] Suraj, "Customer Support Ticket Dataset," Kaggle. https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset  
-[5] C. Amaral, M. Fantinato, and S. Peres, "Incident management process enriched event log," UCI Machine Learning Repository. https://archive.ics.uci.edu/dataset/498/incident+management+process+enriched+event+log  
-[6] ServiceNow, "Define priority lookup rules," ServiceNow Product Documentation. https://www.servicenow.com/docs/r/it-service-management/incident-management/def-prio-lookup-rules.html
+[1] F. Al-Hawari and H. Barham, “A machine learning based help desk system for IT service management,” Journal of King Saud University – Computer and Information Sciences, vol. 33, no. 6, pp. 702-718, 2021. https://doi.org/10.1016/j.jksuci.2019.04.001
+
+[2] Microsoft / Endava, “ITSM ticket classification proof-of-concept repository,” GitHub. https://github.com/pourabkarchaudhuri/itsm-ticket-classification
+
+[3] Suraj, “Customer Support Ticket Dataset,” Kaggle. https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset
