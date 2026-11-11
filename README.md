@@ -1,110 +1,147 @@
-# TicketIQ: AI-Assisted Support Ticket Triage and Similar-Case Retrieval
 
-TicketIQ is a proposed AI Engineering prototype for IT support teams. It will classify the text of a new support ticket, retrieve similar historical tickets, and display recorded resolutions only when the data provides a sufficiently relevant reference. It is a human decision-support tool, not an autonomous system.
+# TicketIQ: Comparative Machine-Learning Models for Support Ticket Classification
 
-## Problem Statement
+**Project Domain:** IT Support / IT Service Management (ITSM)  
+**Project Type:** AI Engineering Prototype  
+**Status:** Week 2 Scope and Architecture Revision
 
-Support staff may need to manually read incoming tickets, assign categories, and search historical tickets for related cases. Research and existing tools demonstrate that ticket classification and AI-assisted support are practical tasks to investigate [1–3]. This project has not independently measured the size of the problem in a specific organisation, so it will evaluate a prototype using public data rather than claim a measured business impact.
+## 1. Project Overview
 
-## Evidence of the Problem
+TicketIQ is a machine-learning prototype that classifies incoming support tickets into predefined categories using ticket subject and initial description.
 
-- A 2021 help-desk study reported that using ticket comments and descriptions improved classification accuracy from 53.8% to 81.4% in its experiment [1]. This result is not a performance claim for TicketIQ.
-- A Microsoft/Endava proof-of-concept describes automatic classification of support tickets and around 50,000 labelled tickets from its help-desk source [2].
-- Atlassian documents AI suggestions based on work-item context and similar past work items [3]. Similar features already exist, so TicketIQ will not claim to be the first.
+The project develops two classification models using the same input data and target categories: a baseline model and an advanced model. Their performance is then evaluated and compared using standard classification metrics.
 
-## Initial Related Work
+TicketIQ is designed as a decision-support prototype. It provides predicted ticket categories for human review; it does not automatically close tickets, execute troubleshooting actions, or modify production systems.
 
-| Work / solution | Existing capability | Relevant limitation or project distinction |
+## 2. Problem Statement
+
+Support teams receive tickets containing descriptions of technical issues or service requests. Staff may need to read each ticket and assign it to the appropriate category before it can be routed or handled.
+
+Manual categorisation can be time-consuming and may be inconsistent, particularly when ticket volumes are high or category definitions overlap.
+
+Machine-learning text classification provides a practical approach to this problem. However, model performance depends on dataset quality, text quality, category definitions, class distribution, and evaluation methods.
+
+TicketIQ will implement two models under the same experimental conditions and compare their results rather than assume that a more advanced model will always perform better.
+
+The project will use a public ticket dataset after its data quality, label suitability, and reuse conditions have been checked. It does not claim a measured reduction in operational workload because it is evaluated as an academic prototype.
+
+## 3. Project Objectives
+
+- **O1 – Baseline Model:** To develop a baseline machine-learning model to classify support tickets into predefined categories using ticket subject and description.
+- **O2 – Advanced Model:** To develop an advanced machine-learning model to classify support tickets into the same predefined categories using the same input data.
+- **O3 – Model Comparison:** To compare the performance of the baseline and advanced machine-learning models using standard classification evaluation metrics.
+
+## 4. Proposed Models
+
+| Objective | Proposed Model | Purpose |
 |---|---|---|
-| Al-Hawari & Barham (2021) [1] | Machine-learning ticket classification in a help-desk system. | TicketIQ will separately evaluate whether historical-ticket retrieval and recorded resolution references are useful. |
-| Microsoft / Endava ticket-classification proof-of-concept [2] | Text preprocessing, ticket-field classification, and a web-service example. | Its documented focus is classification; TicketIQ's project evaluation also covers retrieval relevance and evidence display. |
-| Atlassian Jira Service Management AI suggestions [3] | Suggestions based on work-item context and similar past items. | TicketIQ will display the retrieved historical records as inspectable evidence. This is a design difference, not a claim of superiority. |
-| ServiceNow priority lookup rules [6] | Priority can be determined by configured impact and urgency rules. | Priority prediction is optional because learning rule-generated labels may not provide meaningful added value. |
+| O1 | TF-IDF + Multinomial Naive Bayes | Establish a simple baseline for text classification. |
+| O2 | TF-IDF + Linear Support Vector Classifier (LinearSVC) | Evaluate a stronger classical machine-learning classifier on the same task. |
+| O3 | Comparative Evaluation | Compare both models using the same held-out test data and metrics. |
 
-## Engineering Gap / Limitation
+Both models will use the same selected text fields, target labels, preprocessing approach, and train/test split.
 
-TicketIQ does not claim that similar systems do not exist. Its practical goal is to implement and evaluate a small public-data prototype that combines ticket-category prediction, similar-ticket retrieval, and visible references to usable historical resolutions. If the selected dataset's resolution field is unreliable, resolution suggestion will be excluded rather than fabricated.
+The proposed models are available through scikit-learn. They can be trained locally and do not require a paid AI API or GPU.
 
-## Proposed V1 Architecture
+The final model choice remains subject to dataset inspection and experimental results.
 
-TicketIQ follows a modular, evidence-grounded architecture consisting of the following main components:
+## 5. Proposed V1 Workflow
 
-1. **Input Scope and Privacy Control** – Validates incoming support ticket text and applies configured PII redaction before processing.
-2. **Ticket Classification Capability** – Predicts the primary category of the incoming support ticket.
-3. **Similarity Retrieval Capability** – Searches the historical ticket knowledge source and retrieves the top three similar cases.
-4. **Historical Ticket Knowledge Source** – Stores audited historical tickets, including available ticket identifiers, descriptions, categories and reliable recorded resolutions.
-5. **Relevance and Abstention Control** – Determines whether retrieved cases meet the defined relevance threshold. If sufficient evidence is unavailable, the system abstains from displaying a resolution.
-6. **Evaluation and Telemetry** – Records relevant system outputs and performance information for evaluation without unnecessarily storing raw ticket text or unredacted PII.
+1. Load the selected support-ticket dataset.
+2. Audit missing values, duplicate records, text quality, category labels, class distribution, and reuse conditions.
+3. Select valid ticket subject and initial description fields as model input.
+4. Select one suitable category field as the classification target, subject to the dataset audit.
+5. Clean and combine the selected text fields.
+6. Remove or resolve duplicate records before creating the data split.
+7. Split the dataset into training and held-out test sets using stratified sampling where possible.
+8. Train O1 using TF-IDF and Multinomial Naive Bayes.
+9. Train O2 using TF-IDF and LinearSVC.
+10. Evaluate both models on the same held-out test set.
+11. Compare accuracy, precision, recall, macro-F1, and confusion matrices.
+12. Discuss the results, class-level weaknesses, limitations, and the most suitable model.
 
-The classification and retrieval capabilities are designed as separate modules to support independent evaluation and improvement. Retrieved resolutions are presented as historical references for human verification, not as automatically generated or guaranteed solutions.
+## 6. Evaluation Plan
 
-The proposed architecture is conceptual and may be refined after dataset selection, data auditing and baseline experiments.
+The main comparison metrics are:
 
-## Initial Project Objectives
+- **Accuracy:** Overall proportion of correctly classified test tickets.
+- **Precision:** Proportion of predicted instances of a category that are correct.
+- **Recall:** Proportion of actual instances of a category that the model correctly identifies.
+- **Macro-F1:** Unweighted average of F1 scores across categories.
+- **Confusion Matrix:** Shows which categories are frequently confused.
 
-1. Develop and evaluate a baseline machine-learning model for classifying support-ticket text.
-2. Build similar-ticket retrieval and show any reliable recorded resolution associated with matching cases.
-3. Evaluate classification quality, retrieval relevance, and whether the system correctly abstains when no suitable historical case is found.
+Macro-F1 and per-class precision/recall are important because a dataset may contain imbalanced categories.
 
-Priority prediction is an optional extension only if the labels are reliable and the evaluation avoids data leakage.
+Both models must be evaluated on exactly the same held-out test records. No test data may be used to fit TF-IDF vocabulary, tune model settings, or make model-selection decisions.
 
-## Target Users
+No performance result is assumed in advance. O2 is called the advanced model because of the selected modelling approach, not because it is guaranteed to outperform O1.
 
-- IT help-desk agents.
-- IT support teams who triage incoming tickets.
+## 7. Scope Boundaries
 
-The system will support human decisions. It will not automatically close tickets or execute fixes.
+### Included in V1
 
-## Proposed Data Sources
+- Text-based multi-class support-ticket classification.
+- Two machine-learning models for the same classification task.
+- Shared dataset, target categories, and experimental split.
+- Quantitative evaluation and comparison.
+- Error analysis using classification reports and confusion matrices.
 
-1. **Kaggle Customer Support Ticket Dataset** — https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset  
-   The uploader describes over 8,000 tickets with subject, description, ticket type, priority, and resolution fields [4]. Its authenticity as organisational ITSM data is not established in the inspected description, and a public comment questions the usefulness of the resolution field. Audit the CSV and license before use; remove personal fields such as names and emails. Use recorded resolutions only if their quality is acceptable. Dataset selection is currently pending. Candidate datasets will be evaluated based on domain relevance, text availability, category labels, historical resolution quality, licensing and suitability for retrieval evaluation.
-2. **Microsoft / Endava ITSM ticket-classification project** — https://github.com/pourabkarchaudhuri/itsm-ticket-classification  
-   The repository describes an anonymised, labelled support-ticket dataset and classification proof-of-concept [2]. Verify current dataset availability and terms of use; the project description does not confirm reliable resolution text.
-3. **UCI Incident Management Process Enriched Event Log** — https://archive.ics.uci.edu/dataset/498/incident+management+process+enriched+event+log  
-   UCI reports 24,918 incidents and 141,712 events under CC BY 4.0, but explicitly says textual-information attributes are not included [5]. It is not suitable for TicketIQ's primary text-classification or retrieval task.
+### Excluded from V1
 
-## Project Status: Planning and Architecture Design
+- Similar-ticket retrieval or historical case search.
+- Retrieval of past resolutions or troubleshooting instructions.
+- Generative AI responses or chatbot functionality.
+- Automatic ticket routing, closure, prioritisation, or production-system actions.
+- A separate priority-prediction task.
+- Deep-learning or large-language-model fine-tuning.
 
-## Responsible AI Risks
+## 8. Dataset Candidate
 
-- **Privacy:** remove personal fields before modelling and never expose them in retrieved records.
-- **Wrong resolution:** present historical resolutions as references, show the source ticket, keep a human in the loop, and abstain when similarity is too low.
-- **Missed critical categories:** report per-class metrics or macro-F1 and do not automatically downgrade serious tickets.
-- **Data leakage:** exclude post-resolution information from initial-ticket prediction, remove duplicates before data splitting, and check any priority model against rule-generated labels [6].
+**Customer Support Ticket Dataset – Kaggle**
 
-## References
+https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset
 
-[1] Al-Hawari, F. & Barham, H. (2021). “A machine learning based help desk system for IT service management.” https://doi.org/10.1016/j.jksuci.2019.04.001
+The dataset is a candidate only. Its actual CSV must be inspected before the target category and final experiment are confirmed.
 
-[2] Microsoft / Endava, “ITSM ticket classification” proof-of-concept. https://github.com/pourabkarchaudhuri/itsm-ticket-classification
+The audit must check whether subject and description fields are usable, whether the selected category column contains consistent labels, how many records are missing or duplicated, and whether the category distribution is suitable for supervised classification.
 
-[3] Atlassian Support, “About suggestions on work items.” https://support.atlassian.com/jira-service-management-cloud/docs/about-suggestions-on-issue-view/
+Personal fields that are not required for classification must be excluded.
 
-[4] Suraj, “Customer Support Ticket Dataset,” Kaggle. https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset
+The project must not assume that the dataset is authentic organisational ITSM data merely because it contains support-ticket fields.
 
-[5] UCI Machine Learning Repository, “Incident management process enriched event log.” https://archive.ics.uci.edu/dataset/498/incident+management+process+enriched+event+log
+## 9. Responsible AI and Data Integrity
 
-[6] ServiceNow, “Define priority lookup rules.” https://www.servicenow.com/docs/r/it-service-management/incident-management/def-prio-lookup-rules.html
+- **Privacy:** Exclude personal identifiers such as names, email addresses, and phone numbers from model inputs and published examples.
+- **Data Leakage:** Use only fields available when the ticket is first submitted. Do not use resolution text, closing notes, or other post-resolution information as input.
+- **Duplicate Leakage:** Check and remove exact or near-duplicate records before splitting the data.
+- **Class Imbalance:** Report macro-F1 and per-class metrics rather than relying on accuracy alone.
+- **Human Oversight:** Treat predictions as suggestions for review, not guaranteed correct category assignments.
+- **Limitations:** Document noisy labels, ambiguous categories, missing data, and classes that cannot be evaluated reliably.
 
-## Weekly Progress
+## 10. References
 
-This is an initial project roadmap and may change after the dataset audit and proposal feedback. Planned work is not marked as completed in advance.
+[1] F. Al-Hawari and H. Barham, “A machine learning based help desk system for IT service management,” Journal of King Saud University – Computer and Information Sciences, 2021. https://doi.org/10.1016/j.jksuci.2019.04.001
 
-| Week | Planned work | Expected output | Status |
+[2] Microsoft / Endava proof-of-concept repository, “ITSM ticket classification.” https://github.com/pourabkarchaudhuri/itsm-ticket-classification
+
+[3] Suraj, “Customer Support Ticket Dataset,” Kaggle. https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset
+
+## 11. Weekly Progress
+
+| Week | Planned Work | Expected Output | Status |
 |---|---|---|---|
-| W1 | Define the problem, review initial evidence and existing solutions, and identify possible public datasets. | Project scope draft and initial README. | Draft prepared; dataset audit pending |
-| W2 | Finalise the project boundaries, main requirements, evaluation plan, and high-level design. | Requirements, evaluation criteria, and V1 architecture. | Completed |
-| W3 | Download and inspect candidate datasets; set up a repeatable process to load and prepare the chosen data. | Dataset notes and initial data-preparation workflow. | Planned |
-| W4 | Check data quality, labels, duplicates, missing values, privacy concerns, and possible data leakage. | Data audit and cleaning decisions. | Planned |
-| W5 | Choose practical baseline methods for classifying ticket text and finding similar cases. | Model-choice rationale and baseline experiment plan. | Planned |
-| W6 | Build an early end-to-end prototype using the prepared data and selected baseline methods. | First working pipeline or prototype. | Planned |
-| W7 | Present the proposal and refine the project based on feedback. | Proposal slides and updated scope. | Planned |
-| W8 | Semester break; keep the workload light and organise notes or backlog if needed. | Updated task list, if needed. | Semester break |
-| W9 | Improve similar-ticket search and connect retrieved cases to their recorded resolution where the data supports it. | Retrieval workflow with visible source cases. | Planned |
-| W10 | Test the system on held-out data and inspect incorrect classifications and irrelevant matches. | Evaluation results and error analysis. | Planned |
-| W11 | Add repeatable tests for data processing and core application behaviour; automate suitable checks where feasible. | Basic test suite and quality checks. | Planned |
-| W12 | Package the prototype so another person can run or access it in the intended project environment. | Demonstrable deployed or locally runnable prototype. | Planned |
-| W13 | Add basic error logging and record cases where predictions or retrieval perform poorly. | Logs and a short improvement plan. | Planned |
-| W14 | Review privacy, human oversight, unsupported suggestions, and other Responsible AI risks; apply practical safeguards. | Responsible AI review and documented mitigations. | Planned |
-| W15 | Demonstrate TicketIQ, explain the approach and evaluation results, and be clear about limitations and future work. | Final showcase and project summary. | Planned |
+| W1 | Define the problem, review existing work, and identify candidate datasets. | Initial project scope and README. | Draft prepared |
+| W2 | Finalise objectives, requirements, evaluation criteria, and conceptual architecture. | Updated Week 2 specifications. | Revision in progress |
+| W3 | Download and inspect the candidate dataset; verify fields and reuse conditions. | Dataset audit notes and data-loading workflow. | Planned |
+| W4 | Clean data, inspect labels and class distribution, and check duplicates and leakage risks. | Prepared dataset and cleaning decisions. | Planned |
+| W5 | Implement the baseline TF-IDF + Multinomial Naive Bayes pipeline. | O1 baseline experiment. | Planned |
+| W6 | Implement the TF-IDF + LinearSVC pipeline using the same experiment setup. | O2 advanced-model experiment. | Planned |
+| W7 | Conduct initial evaluation and review the proposal based on feedback. | Initial model results and proposal updates. | Planned |
+| W8 | Semester break; organise code, notes, and backlog. | Updated task list if needed. | Semester break |
+| W9 | Tune permitted model settings using training/validation data and finalise evaluation setup. | Finalised experiment configuration. | Planned |
+| W10 | Evaluate both models on the held-out test set and compare metrics. | Comparative results and confusion matrices. | Planned |
+| W11 | Analyse errors, class-level performance, and limitations; run repeatability checks. | Error analysis and test records. | Planned |
+| W12 | Integrate the selected model or both model outputs into a simple demonstrable prototype. | Locally runnable prototype. | Planned |
+| W13 | Improve input validation, documentation, and basic logging. | Refined prototype and documentation. | Planned |
+| W14 | Review privacy, data leakage, class imbalance, and human oversight safeguards. | Responsible AI review. | Planned |
+| W15 | Demonstrate TicketIQ and explain the models, comparison, results, and limitations. | Final showcase and project report. | Planned |
