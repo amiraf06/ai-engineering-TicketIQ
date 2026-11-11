@@ -34,9 +34,16 @@ The dataset contains the following columns:
 
 ## 3. Intended Purpose
 
-The dataset will be used to explore and develop the TicketIQ ticket classification pipeline.
+The dataset will be used to develop and evaluate TicketIQ's text-based support-ticket classification pipeline.
 
-Potential prediction targets include Ticket Priority and Ticket Type, subject to further validation against the project's requirements.
+The primary model input will consist of the ticket subject and initial description. The system is intended to predict one predefined ticket category based on the selected text.
+
+The `Ticket Type` field is a candidate target label, subject to data-quality and label-suitability checks during the dataset audit. The final target category will be confirmed after this assessment.
+
+`Ticket Priority` will not be treated as a separate prediction task because priority prediction is explicitly outside the scope of TicketIQ V1.
+
+The dataset will initially support data inspection, preparation, label assessment and the development of two comparative classification models.
+
 
 ## 4. Data Access and Rights
 
