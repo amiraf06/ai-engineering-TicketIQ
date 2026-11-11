@@ -53,11 +53,17 @@ The exact dataset licence and redistribution permissions have not yet been verif
 
 ## 5. Initial Observations
 
-- The dataset contains structured tabular data.
-- Ticket Subject and Ticket Description may provide useful textual information.
-- Ticket Priority and Ticket Type may serve as prediction targets.
+The initial dataset inspection identified the following observations:
+- The dataset contains 8,469 records and 17 columns.
+- No missing values were found in Ticket Subject and Ticket Description.
+- No exact duplicate rows or duplicate Ticket IDs were detected.
+- The Ticket Subject field contains only 16 unique values, indicating substantial repetition.
+- All 8,469 ticket descriptions contain at least one placeholder matching the {...} pattern.
+- The inspection identified 392 repeated description values and 144 repeated subject-description combinations after basic text normalization.
+- Several representative descriptions contain unrelated text, template-based content and potentially sensitive information such as email addresses, phone numbers and postal codes.
+- Initial samples suggest possible inconsistencies between ticket text and assigned Ticket Type labels. Further assessment is required before confirming the target label's suitability.
 - Customer Name and Customer Email are direct identifiers and should not be included in the prepared modelling dataset.
-- Resolution, Ticket Status and other outcome-related fields require leakage assessment before model training.
+- Outcome-related fields require leakage assessment before model training.
 
 ## 6. Limitations
 
@@ -67,6 +73,18 @@ Therefore, its suitability for TicketIQ's IT Incident Intelligence scope must be
 
 ## 7. Inspection Evidence
 
-Detailed checks for missing values, duplicate records, data types and representative records are pending.
+An initial dataset inspection was conducted using notebooks/week3_dataset_inspection.py.
 
-These results will be added after dataset inspection.
+The inspection covered:
+- Dataset dimensions and column names.
+- Data types and missing values.
+- Exact duplicate rows and duplicate Ticket IDs.
+- Ticket Type and Ticket Priority distributions.
+- Representative ticket records.
+- Text quality, including empty values, placeholder occurrences, text lengths and duplicate values.
+- Repeated subject-description combinations.
+- Representative samples grouped by Ticket Type.
+
+The inspection identified potential text quality and label consistency concerns. Further label-to-text consistency assessment is required before confirming the suitability of Ticket Type as the classification target.
+
+The original dataset remains unchanged during this inspection.
