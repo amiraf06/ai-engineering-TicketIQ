@@ -95,19 +95,35 @@ No performance result is assumed in advance. O2 is called the advanced model bec
 - A separate priority-prediction task.
 - Deep-learning or large-language-model fine-tuning.
 
-## 8. Dataset Candidate
+## 8. Dataset
 
 **Customer Support Ticket Dataset – Kaggle**
 
 https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset
 
-The dataset is a candidate only. Its actual CSV must be inspected before the target category and final experiment are confirmed.
+The downloaded dataset contains 8,470 rows in total, including the header row, representing 8,469 data records.
 
-The audit must check whether subject and description fields are usable, whether the selected category column contains consistent labels, how many records are missing or duplicated, and whether the category distribution is suitable for supervised classification.
+The dataset will be used as the initial candidate for the TicketIQ classification experiments. However, the total number of records does not represent the final number of usable tickets. Further data inspection and preprocessing are required before model development.
 
-Personal fields that are not required for classification must be excluded.
+The dataset audit will examine:
 
-The project must not assume that the dataset is authentic organisational ITSM data merely because it contains support-ticket fields.
+Missing values in the selected input and target columns.
+
+Duplicate ticket records.
+
+Text quality and consistency in ticket subject and description.
+
+Category label consistency and class distribution.
+
+Records that may contain irrelevant, incomplete, or unsuitable information.
+
+Dataset reuse conditions and suitability for academic use.
+
+Ticket subject and initial description are the proposed model inputs. The final target category will only be confirmed after the dataset audit.
+
+Personal information that is not required for classification will be excluded. Records that are unsuitable for supervised learning will be handled or removed based on documented data-cleaning decisions.
+
+The final number of usable records may be lower than 8,469 after data cleaning and validation.
 
 ## 9. Responsible AI and Data Integrity
 
