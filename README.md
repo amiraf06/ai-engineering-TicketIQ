@@ -3,7 +3,7 @@
 
 **Project Domain:** IT Support / IT Service Management (ITSM)  
 **Project Type:** AI Engineering Prototype  
-**Status:** Week 2 Scope and Architecture Revision
+*Status:* Week 3 Dataset Inspection and Preparation
 
 ## 1. Project Overview
 
@@ -140,9 +140,9 @@ The final number of usable records may be lower than 8,469 after data cleaning a
 
 | Week | Planned Work | Expected Output | Status |
 |---|---|---|---|
-| W1 | Define the problem, review existing work, and identify candidate datasets. | Initial project scope and README. | Draft prepared |
-| W2 | Finalise objectives, requirements, evaluation criteria, and conceptual architecture. | Updated Week 2 specifications. | Revision in progress |
-| W3 | Download and inspect the candidate dataset; verify fields and reuse conditions. | Dataset audit notes and data-loading workflow. | Planned |
+| W1 | Define the problem, review existing work, and identify candidate datasets. | Initial project scope and README. | Completed |
+| W2 | Finalise objectives, requirements, evaluation criteria, and conceptual architecture. | Updated Week 2 specifications. | Completed |
+| W3 | Download and inspect the candidate dataset; verify fields and reuse conditions. | Dataset audit notes, manifest, and preparation workflow. | Completed |
 | W4 | Clean data, inspect labels and class distribution, and check duplicates and leakage risks. | Prepared dataset and cleaning decisions. | Planned |
 | W5 | Implement the baseline TF-IDF + Multinomial Naive Bayes pipeline. | O1 baseline experiment. | Planned |
 | W6 | Implement the TF-IDF + LinearSVC pipeline using the same experiment setup. | O2 advanced-model experiment. | Planned |
