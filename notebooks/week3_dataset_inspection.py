@@ -89,3 +89,179 @@ for category in sorted(df["Ticket Type"].dropna().unique()):
         print("Subject:", record["Ticket Subject"])
         print("Description:", record["Ticket Description"][:400])
         print()
+
+# Label-to-text consistency audit
+print("\n===== LABEL-TO-SUBJECT CONSISTENCY AUDIT =====")
+
+subject_label_table = pd.crosstab(
+    df["Ticket Subject"].fillna("").str.strip(),
+    df["Ticket Type"].fillna("Missing")
+)
+
+print("\nSubject vs Ticket Type:")
+print(subject_label_table.to_string())
+
+print("\n===== SUBJECTS WITH MULTIPLE LABELS =====")
+
+label_counts = (
+    df.groupby("Ticket Subject")["Ticket Type"]
+    .nunique()
+)
+
+conflicting_subjects = label_counts[label_counts > 1]
+
+print("Subjects associated with multiple labels:",
+      len(conflicting_subjects))
+
+if not conflicting_subjects.empty:
+    print("\nPotential conflicting subjects:")
+    for subject in conflicting_subjects.index:
+        print(f"\nSubject: {subject}")
+        print(subject_label_table.loc[subject])
+
+print("\n===== RANDOM SAMPLES BY TICKET TYPE =====")
+
+for category in sorted(df["Ticket Type"].dropna().unique()):
+    sample = df[df["Ticket Type"] == category].sample(
+        n=min(3, len(df[df["Ticket Type"] == category])),
+        random_state=42
+    )
+
+    print(f"\n--- {category} ---")
+
+    for _, record in sample.iterrows():
+        print("Subject:", record["Ticket Subject"])
+        print("Description:", str(record["Ticket Description"])[:250])
+        print()
+
+# Label-to-text consistency audit
+print("\n===== LABEL-TO-SUBJECT CONSISTENCY AUDIT =====")
+
+subject_label_table = pd.crosstab(
+    df["Ticket Subject"].fillna("").str.strip(),
+    df["Ticket Type"].fillna("Missing")
+)
+
+print("\nSubject vs Ticket Type:")
+print(subject_label_table.to_string())
+
+print("\n===== SUBJECTS WITH MULTIPLE LABELS =====")
+
+label_counts = (
+    df.groupby("Ticket Subject")["Ticket Type"]
+    .nunique()
+)
+
+conflicting_subjects = label_counts[label_counts > 1]
+
+print("Subjects associated with multiple labels:",
+      len(conflicting_subjects))
+
+if not conflicting_subjects.empty:
+    print("\nPotential conflicting subjects:")
+    for subject in conflicting_subjects.index:
+        print(f"\nSubject: {subject}")
+        print(subject_label_table.loc[subject])
+
+print("\n===== RANDOM SAMPLES BY TICKET TYPE =====")
+
+for category in sorted(df["Ticket Type"].dropna().unique()):
+    sample = df[df["Ticket Type"] == category].sample(
+        n=min(3, len(df[df["Ticket Type"] == category])),
+        random_state=42
+    )
+
+    print(f"\n--- {category} ---")
+
+    for _, record in sample.iterrows():
+        print("Subject:", record["Ticket Subject"])
+        print("Description:", str(record["Ticket Description"])[:250])
+        print()
+
+# Label-to-text consistency audit
+print("\n===== LABEL-TO-SUBJECT CONSISTENCY AUDIT =====")
+
+subject_label_table = pd.crosstab(
+    df["Ticket Subject"].fillna("").str.strip(),
+    df["Ticket Type"].fillna("Missing")
+)
+
+print("\nSubject vs Ticket Type:")
+print(subject_label_table.to_string())
+
+print("\n===== SUBJECTS WITH MULTIPLE LABELS =====")
+
+label_counts = (
+    df.groupby("Ticket Subject")["Ticket Type"]
+    .nunique()
+)
+
+conflicting_subjects = label_counts[label_counts > 1]
+
+print("Subjects associated with multiple labels:",
+      len(conflicting_subjects))
+
+if not conflicting_subjects.empty:
+    print("\nPotential conflicting subjects:")
+    for subject in conflicting_subjects.index:
+        print(f"\nSubject: {subject}")
+        print(subject_label_table.loc[subject])
+
+print("\n===== RANDOM SAMPLES BY TICKET TYPE =====")
+
+for category in sorted(df["Ticket Type"].dropna().unique()):
+    sample = df[df["Ticket Type"] == category].sample(
+        n=min(3, len(df[df["Ticket Type"] == category])),
+        random_state=42
+    )
+
+    print(f"\n--- {category} ---")
+
+    for _, record in sample.iterrows():
+        print("Subject:", record["Ticket Subject"])
+        print("Description:", str(record["Ticket Description"])[:250])
+        print()
+
+# Label-to-text consistency audit
+print("\n===== LABEL-TO-SUBJECT CONSISTENCY AUDIT =====")
+
+subject_label_table = pd.crosstab(
+    df["Ticket Subject"].fillna("").str.strip(),
+    df["Ticket Type"].fillna("Missing")
+)
+
+print("\nSubject vs Ticket Type:")
+print(subject_label_table.to_string())
+
+print("\n===== SUBJECTS WITH MULTIPLE LABELS =====")
+
+label_counts = (
+    df.groupby("Ticket Subject")["Ticket Type"]
+    .nunique()
+)
+
+conflicting_subjects = label_counts[label_counts > 1]
+
+print("Subjects associated with multiple labels:",
+      len(conflicting_subjects))
+
+if not conflicting_subjects.empty:
+    print("\nPotential conflicting subjects:")
+    for subject in conflicting_subjects.index:
+        print(f"\nSubject: {subject}")
+        print(subject_label_table.loc[subject])
+
+print("\n===== RANDOM SAMPLES BY TICKET TYPE =====")
+
+for category in sorted(df["Ticket Type"].dropna().unique()):
+    sample = df[df["Ticket Type"] == category].sample(
+        n=min(3, len(df[df["Ticket Type"] == category])),
+        random_state=42
+    )
+
+    print(f"\n--- {category} ---")
+
+    for _, record in sample.iterrows():
+        print("Subject:", record["Ticket Subject"])
+        print("Description:", str(record["Ticket Description"])[:250])
+        print()
