@@ -32,18 +32,16 @@ The dataset contains the following columns:
 16. Time to Resolution
 17. Customer Satisfaction Rating
 
+
 ## 3. Intended Purpose
 
 The dataset will be used to develop and evaluate TicketIQ's text-based support-ticket classification pipeline.
 
-The primary model input will consist of the ticket subject and initial description. The system is intended to predict one predefined ticket category based on the selected text.
+The planned model inputs are Ticket Subject and Ticket Description. The system is intended to predict one predefined ticket category from the supplied ticket text.
 
-The `Ticket Type` field is a candidate target label, subject to data-quality and label-suitability checks during the dataset audit. The final target category will be confirmed after this assessment.
+Ticket Type is retained as a provisional candidate target for the comparative classification experiment. The dataset audit identified label-consistency concerns, so model performance must be interpreted in light of this limitation. The audit does not establish that every conflicting record is incorrectly labelled.
 
-`Ticket Priority` will not be treated as a separate prediction task because priority prediction is explicitly outside the scope of TicketIQ V1.
-
-The dataset will initially support data inspection, preparation, label assessment and the development of two comparative classification models.
-
+Ticket Priority will not be treated as a separate prediction task because priority prediction is explicitly outside the scope of TicketIQ V1.
 
 ## 4. Data Access and Rights
 - Dataset source: Kaggle
@@ -59,38 +57,47 @@ The dataset is publicly available through Kaggle under the CC0 1.0 Universal lic
 
 ## 5. Initial Observations
 
-The initial dataset inspection identified the following observations:
 - The dataset contains 8,469 records and 17 columns.
 - No missing values were found in Ticket Subject and Ticket Description.
 - No exact duplicate rows or duplicate Ticket IDs were detected.
-- The Ticket Subject field contains only 16 unique values, indicating substantial repetition.
-- All 8,469 ticket descriptions contain at least one placeholder matching the {...} pattern.
-- The inspection identified 392 repeated description values and 144 repeated subject-description combinations after basic text normalization.
-- Several representative descriptions contain unrelated text, template-based content and potentially sensitive information such as email addresses, phone numbers and postal codes.
-- Initial samples suggest possible inconsistencies between ticket text and assigned Ticket Type labels. Further assessment is required before confirming the target label's suitability.
+- Ticket Subject contains only 16 unique values.
+- All 8,469 descriptions contain at least one placeholder matching the {...} pattern.
+- The initial text audit reported 392 repeated description values and 144 repeated subject-description combinations after basic text normalization.
+- Some descriptions contain unrelated text, template-based content and potentially sensitive information such as email addresses, phone numbers and postal codes.
+- All 16 unique subjects were observed with all five Ticket Type categories.
+- A normalized description-level consistency check identified 49 repeated-description groups with multiple Ticket Type labels, involving 446 records (5.27%).
+- A combined Ticket Subject and Ticket Description consistency check identified 85 repeated input groups with multiple Ticket Type labels, involving 205 records (2.42%).
+- These findings indicate a label-quality risk. They do not prove that every affected record is incorrectly labelled or that all other records have correct labels.
 - Customer Name and Customer Email are direct identifiers and should not be included in the prepared modelling dataset.
 - Outcome-related fields require leakage assessment before model training.
 
 ## 6. Limitations
 
-This dataset represents customer support tickets, not necessarily IT incidents.
+This dataset represents customer support tickets, not necessarily IT incidents. Therefore, its suitability for TicketIQ's IT Incident Intelligence scope must be treated as a limitation.
 
-Therefore, its suitability for TicketIQ's IT Incident Intelligence scope must be treated as a limitation and justified in the project documentation.
+The dataset also contains repetitive and template-based text, unrelated content in some descriptions, placeholders, and evidence of conflicting labels for repeated input combinations. These issues may affect the reliability and generalisability of classification results.
+
+Ticket Type is treated as a provisional target rather than an independently verified ground-truth label. Any model evaluation must acknowledge the observed label-quality risk.
 
 ## 7. Inspection Evidence
 
-An initial dataset inspection was conducted using notebooks/week3_dataset_inspection.py.
+Dataset inspection was conducted using `notebooks/week3_dataset_inspection.py` and supplementary terminal-based consistency checks.
 
 The inspection covered:
+
 - Dataset dimensions and column names.
 - Data types and missing values.
 - Exact duplicate rows and duplicate Ticket IDs.
 - Ticket Type and Ticket Priority distributions.
 - Representative ticket records.
-- Text quality, including empty values, placeholder occurrences, text lengths and duplicate values.
+- Text quality, including empty values, placeholder occurrences, text lengths and repeated values.
 - Repeated subject-description combinations.
 - Representative samples grouped by Ticket Type.
+- Label-to-subject consistency.
+- Description-level and combined subject-description label consistency.
 
-The inspection identified potential text quality and label consistency concerns. Further label-to-text consistency assessment is required before confirming the suitability of Ticket Type as the classification target.
+The inspection identified potential text-quality and label-consistency concerns. In particular, 205 records (2.42%) belong to repeated subject-description groups with more than one assigned Ticket Type.
+
+These findings are documented as dataset limitations for subsequent preparation and model evaluation. They do not justify automatically deleting all affected records or assuming that every label is incorrect.
 
 The original dataset remains unchanged during this inspection.
