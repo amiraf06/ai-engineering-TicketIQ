@@ -153,3 +153,17 @@ The inspection identified potential text-quality and label-consistency concerns.
 No records were automatically removed based on the label-consistency findings. The original raw dataset remains unchanged during this inspection.
 
 The inspection findings will inform the preparation decisions and validation checks documented in the subsequent pipeline stage.
+
+**Preparation Approach and Engineering Trade-offs**
+
+For Week 3, a **conservative data preparation strategy** was selected over aggressive automated cleaning:
+
+| Approach | Advantages | Risks / Trade-offs |
+| :--- | :--- | :--- |
+| **Conservative Cleaning (Selected)** | Preserves all 8,469 records, maintains data lineage, and prevents accidental deletion of valid ticket context. | Retains 42 exact duplicate rows and 205 records in conflicting label groups that must be handled before model training. |
+| **Aggressive Cleaning** | Immediately produces a smaller, denoised dataset. | High risk of corrupting valid reference numbers or dates via broad regex rules, and risks introducing bias by dropping conflicting labels without domain verification. |
+
+**Key Preparation Decisions:**
+- **Operations Applied:** Selected the 3 required columns (`Ticket Subject`, `Ticket Description`, `Ticket Type`), trimmed leading/trailing whitespace, redacted 80 confirmed email patterns (`[REDACTED_EMAIL]`), and audited duplicates and label consistency.
+- **Ambiguous Numeric Patterns (102 Phone Candidates):** Flagged for audit rather than automatically redacted so that legitimate ticket reference numbers, dates, and product codes are not accidentally destroyed.
+- **Downstream Plan (Week 4):** Exact duplicate records (42 rows) and conflicting template groups (205 records) are documented in `data/week3_manifest.json` and will be resolved prior to `train_test_split` in Week 4 to prevent duplicate data leakage.
