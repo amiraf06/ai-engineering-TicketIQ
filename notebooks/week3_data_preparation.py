@@ -535,6 +535,13 @@ manifest = {
     "source": {
         "filename": RAW_DATA_PATH.name,
         "relative_path": "data/raw/customer_support_tickets.csv",
+        "url": "https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset",
+        "creator": "suraj520 (Kaggle username)",
+        "version": "Version 1",
+        "file_size": "3.95 MB",
+        "last_updated": "3 years ago (as displayed on Kaggle)",
+        "license": "CC0: Public Domain",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
         "sha256": source_hash,
         "row_count": int(original_row_count),
         "column_count": int(len(original_columns)),
@@ -553,11 +560,12 @@ manifest = {
             "Selected Ticket Subject, Ticket Description and Ticket Type.",
             "Trimmed leading and trailing whitespace.",
             "Redacted obvious email addresses in text fields.",
+            "Flagged potential phone-number patterns without automatic redaction.",
             "Validated target labels against the expected label set.",
             "Audited duplicate records without deleting them.",
             "Audited conflicting labels without modifying them."
         ],
-
+        
         "missing_values_before_preparation": missing_before,
 
         "email_redaction_counts": email_counts_before,
