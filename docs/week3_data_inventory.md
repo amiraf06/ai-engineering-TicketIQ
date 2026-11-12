@@ -57,6 +57,39 @@ The dataset will support data inspection, preparation, documented quality assess
 
 The dataset is publicly available through Kaggle under the CC0 1.0 Universal licence. The original dataset source and licence reference will be retained for documentation and traceability.
 
+
+**4.1 Source Identification**
+
+| Source ID | Dataset / Filename | Type and Purpose | Version / Date / Owner | Access and Usage Rights | Inspection Evidence |
+|---|---|---|---|---|---|
+| S01 | Customer Support Ticket Dataset (`customer_support_tickets.csv`) — https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset | Structured CSV dataset containing customer support ticket information. Candidate source for TicketIQ's text-based ticket classification experiment. | Version 1; 3.95 MB; last updated approximately 3 years ago, as displayed in Kaggle metadata during inspection; dataset author displayed as Suraj (`suraj520`). | Publicly available through Kaggle. Licence displayed as CC0 1.0 Universal. Licence reference: https://creativecommons.org/publicdomain/zero/1.0/ | Inspected using `notebooks/week3_dataset_inspection.py`. The source contains 8,469 records and 17 columns. Inspection covered data types, missing values, duplicates, text quality, label distribution and label consistency. |
+
+**4.2 Requirement-to-Data Mapping**
+
+The following mapping connects TicketIQ's Week 2 requirements to the fields and evidence available in source S01.
+
+| Requirement ID | Requirement Focus | Relevant Source Fields / Evidence | Assessment and Limitation |
+|---|---|---|---|
+| FR1 | Accept ticket subject and initial description as classification input. | `Ticket Subject`, `Ticket Description` | Both required text fields exist and contain no missing values. However, the dataset represents general customer support and is not confirmed to be an ITSM dataset. |
+| FR3 | Baseline classification using TF-IDF and Multinomial Naive Bayes. | `Ticket Subject`, `Ticket Description`, provisional target `Ticket Type` | The required text fields and five candidate categories are available. Target suitability and label quality remain subject to further validation. |
+| FR4 | Advanced classification using TF-IDF and LinearSVC. | Same input fields and provisional target `Ticket Type` used for FR3. | The same source fields and target definition must be maintained for a fair comparison. Dataset suitability remains a limitation. |
+| RAI1 | Exclude unnecessary personal identifiers from model inputs and public examples. | `Customer Name`, `Customer Email`, `Ticket Subject`, `Ticket Description` | Customer Name and Customer Email are excluded. Preparation also redacts 80 detected email patterns in descriptions. A further 102 phone-like patterns were flagged, not automatically redacted; residual personal information may remain. |
+| RAI2 | Prevent data leakage from information unavailable at initial ticket submission. | `Ticket Subject`, `Ticket Description`; excluded fields include `Resolution`, `Ticket Status`, `First Response Time`, `Time to Resolution` and `Customer Satisfaction Rating`. | Only the initial ticket text is selected as model input. Post-submission and outcome-related fields are excluded from the prepared modelling dataset. |
+| RAI4 | Check exact and near-duplicate records before dataset splitting. | `Ticket ID`, `Ticket Subject`, `Ticket Description`, `Ticket Type` | The source has 0 exact duplicate full rows and 0 duplicate Ticket ID values. However, the selected three-column projection contains 42 exact duplicate rows. The combined subject-description audit also identified 85 groups with multiple labels, involving 205 records. These cases must be handled before train/test splitting. |
+| NFR3 | Ensure repeatable preprocessing and experiment execution. | Source CSV, preparation script, prepared CSV and `data/week3_manifest.json` | Source and output SHA-256 hashes, preparation operations and validation results are recorded in the manifest. A documented random seed and repeatable training configuration must also be maintained in the model pipeline. |
+
+**Duplicate Count Clarification**
+
+The source-level duplicate audit and selected-column duplicate audit measure different things:
+
+- **0 exact duplicate full rows:** No records were identical across all 17 original columns.
+- **42 exact duplicate selected rows:** After projecting the source into `Ticket Subject`, `Ticket Description` and `Ticket Type`, 42 duplicate rows were detected and retained during preparation.
+
+These findings are not contradictory. Records can differ in excluded columns while sharing identical values across the three selected modelling columns.
+
+The conflicting-label groups are treated as data-quality risks, not automatically confirmed mislabelled records. They must be investigated and handled before model evaluation to reduce the risk of train/test leakage.
+
+
 **5\. Initial Observations**
 
 The dataset inspection and text-quality assessment identified the following observations:
