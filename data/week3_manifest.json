@@ -1,129 +1,44 @@
 {
-    "manifest_version": "1.0",
-    "project": "TicketIQ",
-    "stage": "Week 3 Part B - Data Preparation",
-    "generated_at_utc": "2026-11-12T16:04:22.363567+00:00",
-    "source": {
-        "filename": "customer_support_tickets.csv",
-        "relative_path": "data/raw/customer_support_tickets.csv",
-        "url": "https://www.kaggle.com/datasets/suraj520/customer-support-ticket-dataset",
-        "creator": "suraj520 (Kaggle username)",
-        "version": "Version 1",
-        "file_size": "3.95 MB",
-        "last_updated": "3 years ago (as displayed on Kaggle)",
-        "license": "CC0: Public Domain",
-        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "sha256": "b06a9cde84da65db388bd964d75f88ee1eed96607cf75d0c35f09c3f11bf8bea",
-        "row_count": 8469,
-        "column_count": 17,
-        "columns": [
-            "Ticket ID",
-            "Customer Name",
-            "Customer Email",
-            "Customer Age",
-            "Customer Gender",
-            "Product Purchased",
-            "Date of Purchase",
-            "Ticket Type",
-            "Ticket Subject",
-            "Ticket Description",
-            "Ticket Status",
-            "Resolution",
-            "Ticket Priority",
-            "Ticket Channel",
-            "First Response Time",
-            "Time to Resolution",
-            "Customer Satisfaction Rating"
-        ]
-    },
-    "preparation": {
-        "selected_columns": [
-            "Ticket Subject",
-            "Ticket Description",
-            "Ticket Type"
-        ],
-        "excluded_columns": [
-            "Ticket ID",
-            "Customer Name",
-            "Customer Email",
-            "Customer Age",
-            "Customer Gender",
-            "Product Purchased",
-            "Date of Purchase",
-            "Ticket Status",
-            "Resolution",
-            "Ticket Priority",
-            "Ticket Channel",
-            "First Response Time",
-            "Time to Resolution",
-            "Customer Satisfaction Rating"
-        ],
-        "operations": [
-            "Selected Ticket Subject, Ticket Description and Ticket Type.",
-            "Trimmed leading and trailing whitespace.",
-            "Redacted obvious email addresses in text fields.",
-            "Flagged potential phone-number patterns without automatic redaction.",
-            "Validated target labels against the expected label set.",
-            "Audited duplicate records without deleting them.",
-            "Audited conflicting labels without modifying them."
-        ],
-        "missing_values_before_preparation": {
-            "Ticket Subject": 0,
-            "Ticket Description": 0,
-            "Ticket Type": 0
-        },
-        "email_redaction_counts": {
-            "Ticket Subject": 0,
-            "Ticket Description": 80
-        },
-        "phone_candidate_counts": {
-            "Ticket Subject": 0,
-            "Ticket Description": 102
-        },
-        "duplicate_policy": "Duplicate records were retained. No automatic duplicate removal was applied.",
-        "label_distribution": {
-            "Billing inquiry": 1634,
-            "Cancellation request": 1695,
-            "Product inquiry": 1641,
-            "Refund request": 1752,
-            "Technical issue": 1747
-        },
-        "unexpected_labels": [],
-        "missing_expected_labels": []
-    },
-    "quality_audit": {
-        "selected_column_duplicate_rows": 42,
-        "description_level_label_consistency": {
-            "total_unique_input_groups": 8066,
-            "groups_with_multiple_labels": 49,
-            "records_in_conflicting_groups": 446
-        },
-        "subject_description_label_consistency": {
-            "total_unique_input_groups": 8325,
-            "groups_with_multiple_labels": 85,
-            "records_in_conflicting_groups": 205
-        },
-        "output_column_validation": true,
-        "output_row_count_validation": true,
-        "output_missing_value_validation": true
-    },
-    "output": {
-        "filename": "ticketiq_dataset.csv",
-        "relative_path": "data/processed/ticketiq_dataset.csv",
-        "sha256": "5aaa5ecb6e21aab8fd08b840ad572ee86e12cc609970c55fff136fc18b7fa399",
-        "row_count": 8469,
-        "column_count": 3,
-        "columns": [
-            "Ticket Subject",
-            "Ticket Description",
-            "Ticket Type"
-        ]
-    },
-    "limitations": [
-        "The source dataset is a customer support dataset, not necessarily an ITSM dataset.",
-        "Conflicting labels were retained and require further investigation.",
-        "Possible phone-number patterns were flagged but not automatically redacted.",
-        "Potential personal information other than obvious email addresses may remain in text fields.",
-        "The prepared dataset should remain local until privacy review is completed."
-    ]
+  "pipeline_version": "week3-v1",
+  "generated_at_utc": "2026-11-14T04:31:49.289912+00:00",
+  "project": "TicketIQ",
+  "selected_pathway": "B - CSV/Excel",
+  "records": [
+    {
+      "source_id": "S01",
+      "source_filename": "customer_support_tickets.csv",
+      "source_relative_path": "data/raw/customer_support_tickets.csv",
+      "source_sha256": "b06a9cde84da65db388bd964d75f88ee1eed96607cf75d0c35f09c3f11bf8bea",
+      "prepared_output": "data/processed/prepared_table.csv",
+      "prepared_sha256": "b956e3fcfce93196dc9a15d9fda2dc29ca49d1d55ae70531d4fede3a325e0ba1",
+      "processing_note": "Selected subject, description and Ticket Type; trimmed outer whitespace; redacted detected emails; excluded conflicting normalised input groups; removed exact duplicate modelling rows.",
+      "source_version": "Version 1 (as displayed on Kaggle)",
+      "source_owner": "suraj520",
+      "access_rights": "CC0 1.0 Universal as displayed on Kaggle; recheck before redistribution",
+      "status": "Prepared; residual privacy and dataset-suitability review required"
+    }
+  ],
+  "comparison": {
+    "approach_a_rows": 8469,
+    "approach_b_rows": 8240,
+    "conflicting_groups_excluded": 85,
+    "conflicting_records_excluded": 205,
+    "exact_duplicate_rows_removed": 24
+  },
+  "validation": {
+    "file_exists": true,
+    "file_non_empty": true,
+    "schema": true,
+    "row_count": true,
+    "no_missing": true,
+    "all_five_labels": true,
+    "no_exact_duplicates": true,
+    "no_conflicting_input_groups": true
+  },
+  "limitations": [
+    "General customer support source, not verified authentic ITSM incident data.",
+    "Ticket Type is supplied, not independently verified ground truth.",
+    "Excluding conflicting groups does not prove which original label is correct.",
+    "Phone-like patterns are flagged, not redacted; residual PII may remain."
+  ]
 }
