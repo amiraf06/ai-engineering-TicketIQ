@@ -3,7 +3,7 @@
 
 **Project Domain:** IT Support / IT Service Management (ITSM)  
 **Project Type:** AI Engineering Prototype  
-*Status:* Week 3 Dataset Inspection and Preparation
+*Status:* Week 3 Data Engineering (Parts A–C) — Completed
 
 ## 1. Project Overview
 
