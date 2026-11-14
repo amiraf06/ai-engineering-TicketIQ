@@ -1,0 +1,85 @@
+{
+  "pipeline_version": "week3-v1",
+  "generated_at_utc": "2026-11-14T07:55:21.872763+00:00",
+  "data_type": "tabular",
+  "configuration": {
+    "selected_columns": [
+      "Ticket Subject",
+      "Ticket Description",
+      "Ticket Type"
+    ],
+    "trim_text": true,
+    "redact_emails": true,
+    "exclude_conflicting_groups": true,
+    "remove_exact_duplicates": true
+  },
+  "processing_method": "selected_columns=Ticket Subject, Ticket Description, Ticket Type; trim_outer_whitespace=True; redact_detected_emails=True; exclude_conflicting_groups=85; remove_exact_duplicates=24",
+  "sources": [
+    {
+      "path": "/content/week3_project/data/raw/customer_support_tickets.csv",
+      "sha256": "b06a9cde84da65db388bd964d75f88ee1eed96607cf75d0c35f09c3f11bf8bea"
+    }
+  ],
+  "outputs": [
+    "/content/week3_project/data/pipeline_v1/tabular/prepared_table.csv"
+  ],
+  "source_output_mapping": [
+    {
+      "source": "/content/week3_project/data/raw/customer_support_tickets.csv",
+      "output": "/content/week3_project/data/pipeline_v1/tabular/prepared_table.csv"
+    }
+  ],
+  "inspection": {
+    "rows": 8469,
+    "columns": [
+      "Ticket ID",
+      "Customer Name",
+      "Customer Email",
+      "Customer Age",
+      "Customer Gender",
+      "Product Purchased",
+      "Date of Purchase",
+      "Ticket Type",
+      "Ticket Subject",
+      "Ticket Description",
+      "Ticket Status",
+      "Resolution",
+      "Ticket Priority",
+      "Ticket Channel",
+      "First Response Time",
+      "Time to Resolution",
+      "Customer Satisfaction Rating"
+    ],
+    "missing": {
+      "Ticket ID": 0,
+      "Customer Name": 0,
+      "Customer Email": 0,
+      "Customer Age": 0,
+      "Customer Gender": 0,
+      "Product Purchased": 0,
+      "Date of Purchase": 0,
+      "Ticket Type": 0,
+      "Ticket Subject": 0,
+      "Ticket Description": 0,
+      "Ticket Status": 0,
+      "Resolution": 5700,
+      "Ticket Priority": 0,
+      "Ticket Channel": 0,
+      "First Response Time": 2819,
+      "Time to Resolution": 5700,
+      "Customer Satisfaction Rating": 5700
+    },
+    "exact_duplicates": 0
+  },
+  "validation": {
+    "output_count": 1,
+    "output_sha256": [
+      "0b812b7c3d4cd126b66f06c703c30bafa06eedbca13b7ee3ce59c3a1d8b278ba"
+    ],
+    "output_bytes": [
+      2717658
+    ]
+  },
+  "source_version": "Not verified",
+  "access_rights": "Not verified — check before sharing"
+}
