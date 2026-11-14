@@ -1,6 +1,6 @@
 {
   "pipeline_version": "week3-v1",
-  "generated_at_utc": "2026-11-14T04:31:49.289912+00:00",
+  "generated_at_utc": "2026-11-14T06:27:34.113055+00:00",
   "project": "TicketIQ",
   "selected_pathway": "B - CSV/Excel",
   "records": [
@@ -10,7 +10,7 @@
       "source_relative_path": "data/raw/customer_support_tickets.csv",
       "source_sha256": "b06a9cde84da65db388bd964d75f88ee1eed96607cf75d0c35f09c3f11bf8bea",
       "prepared_output": "data/processed/prepared_table.csv",
-      "prepared_sha256": "b956e3fcfce93196dc9a15d9fda2dc29ca49d1d55ae70531d4fede3a325e0ba1",
+      "prepared_sha256": "45c80b20f6f492e7893576f55934d512bb102b1ae7b197b8ba593dc59289880e",
       "processing_note": "Selected subject, description and Ticket Type; trimmed outer whitespace; redacted detected emails; excluded conflicting normalised input groups; removed exact duplicate modelling rows.",
       "source_version": "Version 1 (as displayed on Kaggle)",
       "source_owner": "suraj520",
