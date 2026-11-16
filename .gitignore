@@ -1,4 +1,1 @@
 
-# Ignore raw and processed dataset CSVs (RAI1 Privacy Policy)
-data/raw/*.csv
-data/processed/*.csv
